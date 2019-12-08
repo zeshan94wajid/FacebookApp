@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Facebook\Facebook;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -13,19 +13,31 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Facebook $fb)
     {
-        $this->middleware('auth');
+        $this->middleware(function ($request, $next) use ($fb) {
+            $fb->setDefaultAccessToken(Auth::user()->facebook_token);
+            $this->api = $fb;
+            return $next($request);
+        });
     }
 
     /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * Show user's facebook postr
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Facebook\Exceptions\FacebookSDKException
      */
     public function index()
     {
-        return view('home');
+        try {
+            $posts = json_decode($this->api->get('/me/feed')->getBody(), true);
+
+        } catch (FacebookSDKException $e) {
+
+        }
+
+        dd($posts);
+        return view('home', ['posts' => $posts['data'], 'user' => Auth::user()]);
     }
 
     /**
