@@ -34,5 +34,7 @@ return [
         'client_id' => env('FACEBOOK_CLIENT_ID'),
         'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
         'redirect' => 'http://localhost:8000/callback',
+        'default_graph_version' => 'v3.2',
+        'default_access_token' => env('FACEBOOK_ACCESS_TOKEN')
     ],
 ];
