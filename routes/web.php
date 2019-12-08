@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Auth::routes();
@@ -24,6 +24,6 @@ Route::group(['middleware' => [
 
 });
 
-Route::get('/logout', 'HomeController@logout');
+Route::get('/logout', 'HomeController@logout')->name('logout');
 Route::get('/login/facebook', 'Auth\LoginController@redirectToProvider');
 Route::get('/callback', 'Auth\LoginController@handleProviderCallback');
